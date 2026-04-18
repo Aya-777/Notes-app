@@ -9,7 +9,7 @@ const NoteList = ({ notes }) => {
         data={notes}
         renderItem={({ item }) => 
         <NoteItem note={item} />}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item) => item.id}
       />
     </View>
   );
