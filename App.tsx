@@ -2,6 +2,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import { StyleSheet, useColorScheme, View } from 'react-native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import AppNavigator from './src/navigation/AppNavigator';
+import 'react-native-url-polyfill/auto';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';

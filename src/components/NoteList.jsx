@@ -8,8 +8,8 @@ const NoteList = ({ notes }) => {
       <FlatList
         data={notes}
         renderItem={({ item }) => 
-        <NoteItem note={item} />}
-        keyExtractor={(item) => item.id}
+          <NoteItem note={item} />}
+        keyExtractor={(item) => item.$id}
       />
     </View>
   );

@@ -1,38 +1,46 @@
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View, Alert } from "react-native";
 import NoteList from '../components/NoteList';
 import AddNoteModal from '../components/AddNoteModal';
-import { useState} from "react";
+import { useState, useEffect } from "react";
+import noteService from "../services/noteService";
 
 
 const NoteScreen = ({ navigation }) => {
 
-  const [notes, setNotes] = useState([
-    { id: 1, title: 'Note 1', content: 'This is the content of note 1.' },
-    { id: 2, title: 'Note 2', content: 'This is the content of note 2.' },
-    { id: 3, title: 'Note 3', content: 'This is the content of note 3.' }
-  ]);
+  const [notes, setNotes] = useState([]);
   const [newNoteTitle, setNewNoteTitle] = useState('');
   const [newNoteContent, setNewNoteContent] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
+  
+  useEffect(() => {
+    fetchNotes();
+  }, []);
 
-  const addNote = () => {
-    
-    if(!newNoteTitle.trim() || !newNoteContent.trim()) {
-      alert("Please enter both title and content for the note.");
-      return;
+  const fetchNotes = async () => {
+    const response = await noteService.getNotes();
+    if(response.error){
+      Alert.alert('Error', response.error);
+    }else{
+      setNotes(response);
     }
+  };
 
-    const newNote = {
-      id: Date.now().toString(),
-      title: newNoteTitle,
-      content: newNoteContent
-    };
-    setNotes([...notes, newNote]);
-    
-    setNewNoteTitle("");
-    setNewNoteContent("");
-    setModalVisible(false);
+  // add New Note
+  const addNote = async () => {
+    if (newNoteTitle.trim()) {
+      
+      const response = await noteService.addNote(newNoteTitle, newNoteContent);
+      if(response.error){
+        Alert.alert('Error', response.error);
+      }else{
+        setNotes([...notes, response.data]);
+      }
+
+      setNewNoteTitle("");
+      setNewNoteContent("");
+      setModalVisible(false);
+    }
   };
 
 
