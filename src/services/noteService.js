@@ -10,6 +10,7 @@ const noteService = {
   async getNotes() {
     const response = await databaseService.listDocuments(dbId, colId);
     if (response.error) {
+      console.log("Error listing notes:(notes) ", error.message);
       return {error: response.error};
     }
     return response;
@@ -26,8 +27,9 @@ const noteService = {
       $createdAt: new Date().toISOString()
     };
 
-    const response = await databaseService.createDocument(dbId, colId, data, ID.unique());
-    if(response.error){
+    const response = await databaseService.createDocument(
+      dbId, colId, data, ID.unique());
+    if(response?.error){
       return {error: response.error};
     }
     return {data: response};

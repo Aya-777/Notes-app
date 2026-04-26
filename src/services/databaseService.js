@@ -8,7 +8,7 @@ const databaseService = {
       const response = await database.listDocuments(dbId, colId);
       return response.documents || [];
     } catch (error) {
-      console.error("Error listing documents:", error.message);
+      console.error("Error listing documents:(db) ", error.message);
       return {error: error.message};
     }
   },
