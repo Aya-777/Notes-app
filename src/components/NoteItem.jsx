@@ -1,18 +1,26 @@
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import React from 'react';
 
-const NoteItem = ({ note }) => {
+const NoteItem = ({ note, onDelete }) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{note.title}</Text>
-      <Text style={styles.content}>{note.content}</Text>
+      <View>
+        <Text style={styles.title}>{note.title}</Text>
+        <Text style={styles.content}>{note.content}</Text>
+      </View>
+      <TouchableOpacity onPress={ () => onDelete(note.$id) }
+      >
+        <Text style={styles.delete}>❌</Text>
+      </TouchableOpacity>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container:{
-    flexDirection: 'column',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     backgroundColor: '#f5f5f5',
     padding: 15,
     borderRadius: 5,
@@ -28,6 +36,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#666',
   },
+  delete:{
+    fontSize: 28,
+    color: 'red',
+  }
 });
 
 export default NoteItem;

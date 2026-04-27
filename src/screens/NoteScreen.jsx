@@ -4,6 +4,7 @@ import NoteList from '../components/NoteList';
 import AddNoteModal from '../components/AddNoteModal';
 import { useState, useEffect } from "react";
 import noteService from "../services/noteService";
+import { ActivityIndicator } from 'react-native';
 
 
 const NoteScreen = ({ navigation }) => {
@@ -12,6 +13,8 @@ const NoteScreen = ({ navigation }) => {
   const [newNoteTitle, setNewNoteTitle] = useState('');
   const [newNoteContent, setNewNoteContent] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   
   useEffect(() => {
     fetchNotes();
@@ -20,10 +23,13 @@ const NoteScreen = ({ navigation }) => {
   const fetchNotes = async () => {
     const response = await noteService.getNotes();
     if(response.error){
+      setError(response.error);
       Alert.alert('Error', response.error);
     }else{
       setNotes(response);
+      setError(null);
     }
+    setLoading(false);
   };
 
   // add New Note
@@ -43,11 +49,41 @@ const NoteScreen = ({ navigation }) => {
     }
   };
 
+  // Delete Note
+  const deleteNote = async (id) => {
+    Alert.alert(
+      'Delete Note', 'Are you sure you want to delete this note?', [
+        {
+          text: 'Cancel',
+          style: 'cancel'
+        },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: async () => {
+            const response = await noteService.deleteNote(id);
+            if(response.error){
+              Alert.alert('Error', response.error)
+            }else{
+              setNotes(notes.filter((note)=> note.$id !== id));
+            }
+          } 
+        }
+      ]
+    )
+  }
+
 
   return (
       <View style={styles.container}>
-
-        <NoteList notes={notes} />
+        {loading ? (
+          <ActivityIndicator size='large' color='#007bff' />
+        ) : (
+          <>
+            {error && <Text style={styles.errorText}>{error}</Text>}
+            <NoteList notes={notes} onDelete={deleteNote} />
+          </>
+        ) }
         <TouchableOpacity 
           style={styles.addButton}
           onPress={ () => setModalVisible(true) }
@@ -92,6 +128,12 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#fff',
   },
+  errorText:{
+    color: 'red',
+    textALign: 'center',
+    marginBottom: 10,
+    fontSize: 16
+  }
 
 });
 
