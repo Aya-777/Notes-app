@@ -31,6 +31,15 @@ export const AuthProvider = ({ children }) => {
 
     await checkUser();
     return {success: true};
+  },  
+
+  const signUp = async (email, password) => {
+    const response = await authService.signUp(email, password);
+    if(response?.error){
+      return response.error;
+    }
+
+    return signIn(email, password); // Auto-login after sign up
   },
   
 };
