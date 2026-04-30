@@ -73,6 +73,18 @@ const NoteScreen = ({ navigation }) => {
     )
   }
 
+  const editNote = async (id, newTitle, newContent) => {
+    if(!newTitle.trim()) {
+      Alert.alert('Error', 'Title and content cannot be empty');
+      return;
+    }
+    const response = await noteService.updateNote(id, newTitle, newContent);
+    if(response.error){
+      Alert.alert('Error', response.error)
+    }else{
+      setNotes((prevNotes) => prevNotes.map((note) => note.$id === id ? {...note, title: newTitle, content: newContent} : note));
+    }
+  }
 
   return (
       <View style={styles.container}>
@@ -81,7 +93,7 @@ const NoteScreen = ({ navigation }) => {
         ) : (
           <>
             {error && <Text style={styles.errorText}>{error}</Text>}
-            <NoteList notes={notes} onDelete={deleteNote} />
+            <NoteList notes={notes} onDelete={deleteNote} onEdit={editNote} />
           </>
         ) }
         <TouchableOpacity 
