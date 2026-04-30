@@ -42,4 +42,23 @@ export const AuthProvider = ({ children }) => {
     return signIn(email, password); // Auto-login after sign up
   },
   
+  const signOut = async () => {
+    await authService.signOut();
+    setUser(null);
+    await checkUser();
+  },
+
+  return (
+    <AuthProvider.Provider value={{
+      user,
+      signIn,
+      signUp,
+      signOut,
+      loading
+    }}>
+      {children}
+    </AuthProvider.Provider>
+  )
 };
+
+export const useAuth = () => useContext(AuthContext);
