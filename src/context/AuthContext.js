@@ -21,7 +21,7 @@ export const AuthProvider = ({ children }) => {
     }
 
     setLoading(false);
-  },
+  };
 
   const signIn = async (email, password) => {
     const response = await authService.signIn(email, password);
@@ -31,7 +31,7 @@ export const AuthProvider = ({ children }) => {
 
     await checkUser();
     return {success: true};
-  },  
+  };
 
   const signUp = async (email, password) => {
     const response = await authService.signUp(email, password);
@@ -40,13 +40,13 @@ export const AuthProvider = ({ children }) => {
     }
 
     return signIn(email, password); // Auto-login after sign up
-  },
+  };
   
   const signOut = async () => {
     await authService.signOut();
     setUser(null);
     await checkUser();
-  },
+  };
 
   return (
     <AuthContext.Provider value={{
