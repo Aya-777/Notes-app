@@ -1,4 +1,4 @@
-import {Client, Databases} from "appwrite";
+import {Client, Databases, Account} from "appwrite";
 
 const config = {
   endpoint: "https://fra.cloud.appwrite.io/v1",
@@ -14,4 +14,6 @@ client.setEndpoint(config.endpoint).setProject(config.projectId);
 
 const database = new Databases(client);
 
-export {client, database, config};
+const account = new Account(client);
+
+export {client, database, account, config};

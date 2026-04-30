@@ -8,12 +8,13 @@ const colId = "notes";
 const noteService = {
   // Get all notes
   async getNotes() {
-    const response = await databaseService.listDocuments(dbId, colId);
-    if (response.error) {
+    try{
+      const response = await databaseService.listDocuments(dbId, colId);
+      return response;
+    }catch(error){
       console.log("Error listing notes:(notes) ", error.message);
-      return {error: response.error};
+      return {error: error.message};
     }
-    return response;
   },
   // Add New Note
   async addNote(title, content) {
