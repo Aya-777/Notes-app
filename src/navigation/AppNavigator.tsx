@@ -2,7 +2,7 @@ import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomeScreen from '../screens/HomeScreen';
 import NoteScreen from '../screens/NoteScreen';
-import AuthScreen from '../screens/AuthScreen';
+import LoginScreen from '../screens/LoginScreen';
 import { AuthProvider } from '../context/AuthContext';
 
 const Stack = createNativeStackNavigator();
@@ -39,7 +39,7 @@ const AppNavigator = () => {
           options={{title: 'Notes'}}></Stack.Screen>
         <Stack.Screen
           name="Login"
-          component={AuthScreen}
+          component={LoginScreen}
           options={{title: 'Login'}}></Stack.Screen>
 
       </Stack.Navigator>
