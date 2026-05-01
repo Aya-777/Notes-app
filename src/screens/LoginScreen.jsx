@@ -1,13 +1,44 @@
 import {useState} from "react";
-import {View, Text, StyleSheet, TextInput, TouchableOpacity} from 'react-native';
+import {View, Text, StyleSheet, TextInput, TouchableOpacity, Alert} from 'react-native';
+import{useAuth} from "../context/AuthContext";
 
-const AuthScreen = () => {
+const AuthScreen = ({ navigation }) => {
 
+  const { signIn, signUp } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isRegistering, setIsRegistering] = useState(false);
   const [error, setError] = useState('');
+
+  const handleAuth = async () => {
+    if(!email.trim() || !password.trim()){
+      setError('Email and password are required');
+      return;
+    }
+
+    if(isRegistering){
+      if(password !== confirmPassword){
+        setError('Please check the passwords.');
+        return;
+      }
+
+      let response;
+      if(isRegistering){
+        response = await signUp(email, password);
+      }else{
+        response = await signIn(email, password);
+      }
+
+      if(response?.error){
+        Alert.alert('Error', response.error);
+        return;
+      }
+
+      navigation.replace('Notes');
+    }
+
+  };
 
   return(
     <View style={styles.container}>
@@ -32,7 +63,8 @@ const AuthScreen = () => {
         placeholderTextColor="#aaa"
         value={password}
         onChangeText={setPassword}
-        secureTextEntry
+        // secureTextEntry
+        textContentType='none'
         />
         {isRegistering && (
           <TextInput style={styles.input}
@@ -40,11 +72,13 @@ const AuthScreen = () => {
           placeholderTextColor="#aaa"
           value={confirmPassword}
           onChangeText={setConfirmPassword}
-          secureTextEntry
+          // secureTextEntry
+          textContentType='none'
         />)}
 
         <TouchableOpacity 
-        style={styles.button}>
+        style={styles.button}
+        onPress={handleAuth}>
           <Text style={styles.buttonText}>
             {isRegistering ? 'Sign Up' : 'Login'}
           </Text>
