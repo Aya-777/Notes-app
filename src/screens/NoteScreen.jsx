@@ -5,20 +5,29 @@ import AddNoteModal from '../components/AddNoteModal';
 import { useState, useEffect } from "react";
 import noteService from "../services/noteService";
 import { ActivityIndicator } from 'react-native';
-
+import {useAuth} from '../context/AuthContext';
 
 const NoteScreen = ({ navigation }) => {
 
+  const { user, loading: authLoading } = useAuth();
   const [notes, setNotes] = useState([]);
   const [newNoteTitle, setNewNoteTitle] = useState('');
   const [newNoteContent, setNewNoteContent] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
+
   useEffect(() => {
-    fetchNotes();
-  }, []);
+    if(!authLoading && !user) {
+      navigation.replace('Login');
+    }
+  },[user, authLoading]);
+
+  useEffect(() => {
+    if(user){
+      fetchNotes();
+    }
+  }, [user]);
 
   const fetchNotes = async () => {
     const response = await noteService.getNotes();
