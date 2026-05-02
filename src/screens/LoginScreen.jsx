@@ -1,8 +1,15 @@
 import {useState} from "react";
-import {View, Text, StyleSheet, TextInput, TouchableOpacity, Alert} from 'react-native';
+import {
+  View, 
+  Text, 
+  StyleSheet, 
+  TextInput, 
+  TouchableOpacity, 
+  Alert,
+} from 'react-native';
 import{useAuth} from "../context/AuthContext";
 
-const AuthScreen = ({ navigation }) => {
+const LoginScreen = ({ navigation }) => {
 
   const { signIn, signUp } = useAuth();
   const [email, setEmail] = useState('');
@@ -16,28 +23,23 @@ const AuthScreen = ({ navigation }) => {
       setError('Email and password are required');
       return;
     }
-
+    
+  let response;
     if(isRegistering){
       if(password !== confirmPassword){
         setError('Please check the passwords.');
         return;
       }
-
-      let response;
-      if(isRegistering){
-        response = await signUp(email, password);
-      }else{
-        response = await signIn(email, password);
-      }
-
-      if(response?.error){
-        Alert.alert('Error', response.error);
-        return;
-      }
-
-      navigation.replace('Notes');
+      response = await signUp(email, password);
+    }else{
+      response = await signIn(email, password);
+    }  
+    if(response?.error){
+      // setError(response.error);
+      Alert.alert('Error', response.error);
+      return;
     }
-
+    navigation.replace('Notes');
   };
 
   return(
@@ -48,7 +50,8 @@ const AuthScreen = ({ navigation }) => {
           {isRegistering ? 'Sign Up' : 'Login'}
         </Text>
 
-        {error ? <Text style={styles.error}>{error}</Text> : null}
+        {error ? <Text adjustsFontSizeToFit={true} numberOfLines={1}
+        style={styles.error}>{error}</Text> : null}
 
         <TextInput style={styles.input}
         placeholder="Email"
@@ -151,4 +154,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AuthScreen;
+export default LoginScreen;

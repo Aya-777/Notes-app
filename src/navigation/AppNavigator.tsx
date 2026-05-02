@@ -3,7 +3,18 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomeScreen from '../screens/HomeScreen';
 import NoteScreen from '../screens/NoteScreen';
 import LoginScreen from '../screens/LoginScreen';
-import { AuthProvider } from '../context/AuthContext';
+import { AuthProvider, useAuth } from '../context/AuthContext';
+import{ TouchableOpacity, Text, StyleSheet } from 'react-native';
+
+const HeaderLogout = () => {
+  const {user, signOut} = useAuth();
+
+  return user ? (
+    <TouchableOpacity style={styles.logoutButton} onPress={signOut}>
+      <Text style={styles.logoutText}>Logout</Text>
+    </TouchableOpacity>
+  ) : null;
+}
 
 const Stack = createNativeStackNavigator();
 
@@ -21,6 +32,7 @@ const AppNavigator = () => {
         fontWeight: 'bold',
       },
       headerTitleAlign: 'center',
+      headerRight: () => <HeaderLogout />,
       contentStyle: {
         paddingHorizontal: 10,
         paddingTop: 10,
@@ -46,5 +58,20 @@ const AppNavigator = () => {
     </AuthProvider>
   );
 };
+
+const styles = StyleSheet.create({
+  logoutButton: {
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    backgroundColor: '#372873',
+    borderRadius: 5,
+  },
+  logoutText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+});
+
 
 export default AppNavigator;

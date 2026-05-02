@@ -25,7 +25,8 @@ export const AuthProvider = ({ children }) => {
   const signIn = async (email, password) => {
     const response = await authService.signIn(email, password);
     if(response?.error){
-      return response.error;
+      console.error("Error signing in: ", response.error);
+      return response;
     }
 
     await checkUser();
@@ -35,7 +36,8 @@ export const AuthProvider = ({ children }) => {
   const signUp = async (email, password) => {
     const response = await authService.signUp(email, password);
     if(response?.error){
-      return response.error;
+      console.error("Error signing up: ", response.error);
+      return response;
     }
 
     return signIn(email, password); // Auto-login after sign up

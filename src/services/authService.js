@@ -7,9 +7,9 @@ const authService = {
     try {
       const response = await account.create(ID.unique(), email, password);
       return response;
-    }catch (error) {
-      console.error("Error signing up: ", error.message);
-      return {error: error.message || 'Registeration failed, Please try again.'};
+    }catch (err) {
+      console.error("Error signing up: ", err.message);
+      return {error: err.message || 'Registeration failed, Please try again.'};
     };
   },
   // Sign in
@@ -17,16 +17,16 @@ const authService = {
     try {
       const response = await account.createEmailPasswordSession(email, password);
       return response;
-    }catch (error) {
-      console.error("Error signing in: ", error.message);
-      return {error: error.message || 'Sign in failed, Please check your credentials.'};
+    }catch (err) {
+      console.error("Error signing in: ", err.message);
+      return {error: err.message};
     };
   },
   // Get logged in user
   async getUser(){
     try {
       return await account.get();
-    } catch (error) {
+    } catch (err) {
       return null;
     }
   },
@@ -36,9 +36,9 @@ const authService = {
     try{
       await account.deleteSession('current');
       return {success: true};
-    }catch(error){
-      console.error("Error signing out: ", error.message);
-      return {error: error.message || 'Sign out failed, Please try again.'};
+    }catch(err){
+      // console.error("Error signing out: ", err.message);
+      return {error: err.message};
     }
 
   }
